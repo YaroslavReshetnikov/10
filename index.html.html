@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея Фільмів</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #0a0a0a, #313030, #292626, #000000, #ffffff, #000000, #000000, #424242);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .movie-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .info-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .info-btn:hover {
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+
+        .modal h2 {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .modal-info {
+            line-height: 1.6;
+        }
+
+        .modal-info p {
+            margin-bottom: 15px;
+        }
+
+        .modal-info strong {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 75px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Топ 20 моїх улюблених фільмів</h1>
+        
+        <div class="gallery">
+            <!-- 2001: A Space Odyssey -->
+            <div class="movie-card">
+                <img src="https://upload.wikimedia.org/wikipedia/ru/3/38/2001_A_Space_Odyssey.jpg" alt="2001: A Space Odyssey" class="movie-poster">
+                <div class="movie-title">2001: A Space Odyssey</div>
+                <button class="info-btn" onclick="openModal('modal1')">Клацни</button>
+            </div>
+
+            <!-- Barry Lyndon -->
+            <div class="movie-card">
+                <img src="https://m.media-amazon.com/images/M/MV5BNmM2MGQ5Y2UtYzA3ZC00ZDJlLTkwNDYtMjBmZGExZDJiN2RlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Barry Lyndon" class="movie-poster">
+                <div class="movie-title">Barry Lyndon</div>
+                <button class="info-btn" onclick="openModal('modal2')">Клацни</button>
+            </div>
+
+            <!-- The Passion of Joan of Arc -->
+            <div class="movie-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/The_Passion_of_Joan_of_Arc_%281928%29_English_Poster.png" alt="The Passion of Joan of Arc" class="movie-poster">
+                <div class="movie-title">The Passion of Joan of Arc</div>
+                <button class="info-btn" onclick="openModal('modal3')">Клацни</button>
+            </div>
+
+            <!-- Harakiri -->
+            <div class="movie-card">
+                <img src="https://4.bp.blogspot.com/-R5i-VS_a2is/Wcb1TZs6oMI/AAAAAAAAJJE/8XbFWdmnAXkUu7Yv9ENDAr_nJUIwevWSgCLcBGAs/s1600/Harakiri.jpg" alt="Harakiri" class="movie-poster">
+                <div class="movie-title">Harakiri</div>
+                <button class="info-btn" onclick="openModal('modal4')">Клацни</button>
+            </div>
+
+            <!-- The Godfather -->
+            <div class="movie-card">
+                <img src="https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg" alt="The Godfather" class="movie-poster">
+                <div class="movie-title">The Godfather</div>
+                <button class="info-btn" onclick="openModal('modal5')">Клацни</button>
+            </div>
+
+            <!-- Once Upon a Time... in Hollywood -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/R.b5d34a1a9f034c3812a66c8ca2f4a295?rik=Sn0Z7EabiZ7jqA&riu=http%3a%2f%2fcdn.collider.com%2fwp-content%2fuploads%2f2019%2f06%2fonce-upon-a-time-in-hollywood-poster.jpg&ehk=7c5XjWQ27M%2b6z0tbZxrMexcVOf2MsWAKp935N%2bSaGEo%3d&risl=&pid=ImgRaw&r=0" alt="Once Upon a Time... in Hollywood" class="movie-poster">
+                <div class="movie-title">Once Upon a Time... in Hollywood</div>
+                <button class="info-btn" onclick="openModal('modal6')">Клацни</button>
+            </div>
+
+            <!-- The Wolf of Wall Street -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/OIP.yoWwpRvmpIGwQoQeyMT4-QHaLH?cb=iwp2&rs=1&pid=ImgDetMain" alt="The Wolf of Wall Street" class="movie-poster">
+                <div class="movie-title">The Wolf of Wall Street</div>
+                <button class="info-btn" onclick="openModal('modal7')">Клацни</button>
+            </div>
+
+            <!-- Taxi Driver -->
+            <div class="movie-card">
+                <img src="https://johnsneaker.com/wp-content/uploads/2021/06/il_fullxfull.2368513847_2hh5-scaled-1-1448x2048.jpg" alt="Taxi Driver" class="movie-poster">
+                <div class="movie-title">Taxi Driver</div>
+                <button class="info-btn" onclick="openModal('modal8')">Клацни</button>
+            </div>
+
+            <!-- Seven Samurai -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/OIP.Oduq9ZMrUQQCNkvOvgNOJgHaK9?cb=iwp2&rs=1&pid=ImgDetMain" alt="Seven Samurai" class="movie-poster">
+                <div class="movie-title">Seven Samurai</div>
+                <button class="info-btn" onclick="openModal('modal9')">Клацни</button>
+            </div>
+
+            <!-- Mulholland Drive -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/R.0b5382b3c283953310f6fafc96cfc689?rik=HRB24mjfds4StA&riu=http%3a%2f%2fwww.impawards.com%2f2001%2fposters%2fmulholland_drive_ver1_xlg.jpg&ehk=k9uyU1bk0EYvVkWQ7i6xBgBpLASFPjwn40bAmUOTKug%3d&risl=&pid=ImgRaw&r=0" alt="Mulholland Drive" class="movie-poster">
+                <div class="movie-title">Mulholland Drive</div>
+                <button class="info-btn" onclick="openModal('modal10')">Клацни</button>
+            </div>
+
+            <!-- Psycho -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/OIP.gNTNod1Jr8x_1rOGsyx3CgHaK-?cb=iwp2&w=1024&h=1517&rs=1&pid=ImgDetMain" alt="Psycho" class="movie-poster">
+                <div class="movie-title">Psycho</div>
+                <button class="info-btn" onclick="openModal('modal11')">Клацни</button>
+            </div>
+
+            <!-- Raging Bull -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/OIP.cLu8OmHTHqlbAz-RE2AopQHaLH?cb=iwp2&w=1100&h=1650&rs=1&pid=ImgDetMain" alt="Raging Bull" class="movie-poster">
+                <div class="movie-title">Raging Bull</div>
+                <button class="info-btn" onclick="openModal('modal12')">Клацни</button>
+            </div>
+
+            <!-- Citizen Kane -->
+            <div class="movie-card">
+                <img src="https://th.bing.com/th/id/R.85017add9c83484f101306817bed345a?rik=USx1i%2fY%2ftxd1Zg&riu=http%3a%2f%2fimage.tmdb.org%2ft%2fp%2foriginal%2f8PaG2sxXhae5DPUUIQ1VaBQj8dp.jpg&ehk=n5MR1lNAHwhnaBIFlzX%2bV9RhG57pw3F9m3nel3CgSDg%3d&risl=&pid=ImgRaw&r=0" alt="Citizen Kane" class="movie-poster">
+                <div class="movie-title">Citizen Kane</div>
+                <button class="info-btn" onclick="openModal('modal13')">Клацни</button>
+            </div>
+
+            <!-- One Flew Over the Cuckoo's Nest -->
+            <div class="movie-card">
+                <img src="https://www.themoviedb.org/t/p/original/3jcbDmRFiQ83drXNOvRDeKHxS0C.jpg" alt="One Flew Over the Cuckoo's Nest" class="movie-poster">
+                <div class="movie-title">One Flew Over the Cuckoo's Nest</div>
+                <button class="info-btn" onclick="openModal('modal14')">Клацни</button>
+            </div>
+
+            <!-- Apocalypse Now -->
+            <div class="movie-card">
+                <img src="https://reelposter.com/wp-content/uploads/sites/13/2021/07/APOCALYPSE20NOW20120SHT.jpg" alt="Apocalypse Now" class="movie-poster">
+                <div class="movie-title">Apocalypse Now</div>
+                <button class="info-btn" onclick="openModal('modal15')">Клацни</button>
+            </div>
+
+            <!-- Pulp Fiction -->
+            <div class="movie-card">
+                <img src="https://picfiles.alphacoders.com/371/371109.jpg" alt="Pulp Fiction" class="movie-poster">
+                <div class="movie-title">Pulp Fiction</div>
+                <button class="info-btn" onclick="openModal('modal16')">Клацни</button>
+            </div>
+
+            <!-- Some Like It Hot -->
+            <div class="movie-card">
+                <img src="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p3725_p_v8_aa.jpg" alt="Some Like It Hot" class="movie-poster">
+                <div class="movie-title">Some Like It Hot</div>
+                <button class="info-btn" onclick="openModal('modal17')">Клацни</button>
+            </div>
+
+            <!-- Paris, Texas -->
+            <div class="movie-card">
+                <img src="https://media.senscritique.com/media/000004799477/source_big/Paris_Texas.jpg" alt="Paris, Texas" class="movie-poster">
+                <div class="movie-title">Paris, Texas</div>
+                <button class="info-btn" onclick="openModal('modal18')">Клацни</button>
+            </div>
+
+            <!-- Le Trou -->
+            <div class="movie-card">
+                <img src="https://resizing.flixster.com/jUclSuH2fLaEZAWk1axNWu_A7gU=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzY3MWUwZDcxLTIwZGEtNGMzYi05YzUwLTk0OTk2MzI4MjFkNi5qcGc=" alt="Le Trou" class="movie-poster">
+                <div class="movie-title">Le Trou</div>
+                <button class="info-btn" onclick="openModal('modal19')">Клацни</button>
+            </div>
+
+            <!-- Singin' in the Rain -->
+            <div class="movie-card">
+                <img src="https://www.oscars.org/sites/oscars/files/theatrical_poster_0.jpg" alt="Singin' in the Rain" class="movie-poster">
+                <div class="movie-title">Singin' in the Rain</div>
+                <button class="info-btn" onclick="openModal('modal20')">Клацни</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальні вікна -->
+    <!-- Modal 1: 2001: A Space Odyssey -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal1')">&times;</span>
+            <h2>2001: A Space Odyssey (1968)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Стенлі Кубрик</p>
+                <p><strong>Рік випуску:</strong> 1968</p>
+                <p><strong>Головні актори:</strong> Кір Дуллеа, Гері Локвуд, Вільям Сільвестер</p>
+                <p><strong>Сюжет:</strong> Епічна наукова фантастика про еволюцію людства від первісних часів до космічної ери. Фільм розповідає про таємничий моноліт, який впливає на розвиток цивілізації, та подорож до Юпітера, де астронавти стикаються з штучним інтелектом HAL 9000.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Barry Lyndon -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal2')">&times;</span>
+            <h2>Barry Lyndon (1975)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Стенлі Кубрик</p>
+                <p><strong>Рік випуску:</strong> 1975</p>
+                <p><strong>Головні актори:</strong> Раян О'Ніл, Маріса Беренсон, Патрік Магі</p>
+                <p><strong>Сюжет:</strong> Історія ірландського авантюриста XVIII століття, який намагається пробитися в аристократичне суспільство. Адаптація роману Теккерея розповідає про підйом і падіння Редмонда Барі, який стає Баррі Ліндоном.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: The Passion of Joan of Arc -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal3')">&times;</span>
+            <h2>The Passion of Joan of Arc (1928)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Карл Теодор Дрейєр</p>
+                <p><strong>Рік випуску:</strong> 1928</p>
+                <p><strong>Головні актори:</strong> Рене Жанна Фалконетті, Ежен Сільвен, Андре Берлі</p>
+                <p><strong>Сюжет:</strong> Німий фільм про останні години життя Жанни д'Арк, зосереджений на її суді та стратті. Шедевр німого кіно, що вважається одним з найкращих фільмів всіх часів завдяки потужній грі актриси та новаторській режисурі.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Harakiri -->
+    <div id="modal4" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal4')">&times;</span>
+            <h2>Harakiri (1962)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Масакі Кобаясі</p>
+                <p><strong>Рік випуску:</strong> 1962</p>
+                <p><strong>Головні актори:</strong> Тацуя Накадай, Акіра Ішихама, Шіма Іваситу</p>
+                <p><strong>Сюжет:</strong> Драма про старого самурая, який приходить до кланового маєтку з проханням дозволити йому зробити сепуку. Фільм розкриває критику самурайської честі та лицемірства феодального суспільства через розповідь про трагедію його зятя.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: The Godfather -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal5')">&times;</span>
+            <h2>The Godfather (1972)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Френсіс Форд Коппола</p>
+                <p><strong>Рік випуску:</strong> 1972</p>
+                <p><strong>Головні актори:</strong> Марлон Брандо, Аль Пачіно, Джеймс Каан</p>
+                <p><strong>Сюжет:</strong> Сага про сицилійсько-американську мафіозну родину Корлеоне. Фільм розповідає про передачу влади від патріарха Віто Корлеоне до його наймолодшого сина Майкла та його перетворення з реліктанта в безжального лідера.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Once Upon a Time... in Hollywood -->
+    <div id="modal6" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal6')">&times;</span>
+            <h2>Once Upon a Time... in Hollywood (2019)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Квентін Тарантіно</p>
+                <p><strong>Рік випуску:</strong> 2019</p>
+                <p><strong>Головні актори:</strong> Леонардо ДіКапріо, Бред Пітт, Марго Роббі</p>
+                <p><strong>Сюжет:</strong> Дія відбувається в Голлівуді 1969 року і розповідає про актора Ріка Далтона та його каскадера Кліффа Бута на тлі вбивств, скоєних сектою Чарльза Мансона. Ностальгічний погляд на золоту епоху Голлівуду.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 7: The Wolf of Wall Street -->
+    <div id="modal7" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal7')">&times;</span>
+            <h2>The Wolf of Wall Street (2013)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Мартін Скорсезе</p>
+                <p><strong>Рік випуску:</strong> 2013</p>
+                <p><strong>Головні актори:</strong> Леонардо ДіКапріо, Джона Хілл, Марго Роббі</p>
+                <p><strong>Сюжет:</strong> Біографічна драма про Джордана Белфорта, брокера з Волл-стрит, який збагатився на шахрайстві з цінними паперами. Фільм показує його підйом до багатства, розгульний спосіб життя та неминучий крах через корупцію та наркотики.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 8: Taxi Driver -->
+    <div id="modal8" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal8')">&times;</span>
+            <h2>Taxi Driver (1976)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Мартін Скорсезе</p>
+                <p><strong>Рік випуску:</strong> 1976</p>
+                <p><strong>Головні актори:</strong> Роберт Де Ніро, Джоді Фостер, Сібілл Шепард</p>
+                <p><strong>Сюжет:</strong> Психологічна драма про ветерана В'єтнамської війни Тревіса Бікла, який працює водієм таксі в Нью-Йорку. Поступово занурюючись у самотність та відчування, він планує радикальні дії для "очищення" міста від пороку.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 9: Seven Samurai -->
+    <div id="modal9" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal9')">&times;</span>
+            <h2>Seven Samurai (1954)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Акіра Куросава</p>
+                <p><strong>Рік випуску:</strong> 1954</p>
+                <p><strong>Головні актори:</strong> Тошіро Міфуне, Такасі Шімура, Йошіо Інаба</p>
+                <p><strong>Сюжет:</strong> Епічна історія про сільське село в період Сенгоку, яке наймає семеро самураїв для захисту від банди розбійників. Шедевр японського кіно, що вплинув на безліч наступних фільмів, включаючи "Величну семірку".</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 10: Mulholland Drive -->
+    <div id="modal10" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal10')">&times;</span>
+            <h2>Mulholland Drive (2001)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Девід Лінч</p>
+                <p><strong>Рік випуску:</strong> 2001</p>
+                <p><strong>Головні актори:</strong> Наомі Воттс, Лора Елена Гарінг, Джастін Теру</p>
+                <p><strong>Сюжет:</strong> Сюрреалістичний психологічний трилер про амбітну актрису Бетті та жінку з амнезією Ріту, які розслідують таємницю в Голлівуді. Складна нелінійна розповідь змішує реальність з мріями, створюючи загадкову мозаїку.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 11: Psycho -->
+    <div id="modal11" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal11')">&times;</span>
+            <h2>Psycho (1960)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Альфред Хічкок</p>
+                <p><strong>Рік випуску:</strong> 1960</p>
+                <p><strong>Головні актори:</strong> Ентоні Перкінс, Джанет Лі, Віра Майлз</p>
+                <p><strong>Сюжет:</strong> Психологічний трилер про Маріон Крейн, яка втікає з вкраденими грошми і зупиняється в ізольованому мотелі Бейтса, керованому загадковим Норманом Бейтсом та його домінуючою матір'ю. Революційний фільм жахів, який назавжди змінив кінематограф.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 12: Raging Bull -->
+    <div id="modal12" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal12')">&times;</span>
+            <h2>Raging Bull (1980)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Мартін Скорсезе</p>
+                <p><strong>Рік випуску:</strong> 1980</p>
+                <p><strong>Головні актори:</strong> Роберт Де Ніро, Кеті Моріарті, Джо Пеші</p>
+                <p><strong>Сюжет:</strong> Біографічна драма про боксера Джейка ЛаМотта, його підйом у світі боксу та руйнівний вплив ревнощів і насильства на його особисте життя. Чорно-біла кінематографія підкреслює жорстокість та самознищення головного героя.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 13: Citizen Kane -->
+    <div id="modal13" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal13')">&times;</span>
+            <h2>Citizen Kane (1941)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Орсон Веллс</p>
+                <p><strong>Рік випуску:</strong> 1941</p>
+                <p><strong>Головні актори:</strong> Орсон Веллс, Джозеф Коттен, Дороті Комінгор</p>
+                <p><strong>Сюжет:</strong> Життя та смерть могутнього медіа-магната Чарльза Фостера Кейна, розказана через спогади тих, хто його знав. Дослідження влади, корупції та втраченої невинності, що часто називають найкращим фільмом всіх часів.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 14: One Flew Over the Cuckoo's Nest -->
+    <div id="modal14" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal14')">&times;</span>
+            <h2>One Flew Over the Cuckoo's Nest (1975)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Мілош Форман</p>
+                <p><strong>Рік випуску:</strong> 1975</p>
+                <p><strong>Головні актори:</strong> Джек Ніколсон, Луїза Флетчер, Денні ДеВіто</p>
+                <p><strong>Сюжет:</strong> Рендл Макмерфі симулює психічну хворобу, щоб уникнути в'язниці, і потрапляє до психіатричної лікарні, де стикається з деспотичною сестрою Рачед. Потужна драма про свободу, контроль та людську гідність.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 15: Apocalypse Now -->
+    <div id="modal15" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal15')">&times;</span>
+            <h2>Apocalypse Now (1979)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Френсіс Форд Коппола</p>
+                <p><strong>Рік випуску:</strong> 1979</p>
+                <p><strong>Головні актори:</strong> Мартін Шин, Марлон Брандо, Роберт Дювалл</p>
+                <p><strong>Сюжет:</strong> Капітан Віллард отримує секретну місію під час В'єтнамської війни - знайти та вбити полковника Курца, який створив власне королівство в джунглях. Епічне дослідження безумства війни, заснований на "Серці темряви" Джозефа Конрада.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 16: Pulp Fiction -->
+    <div id="modal16" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal16')">&times;</span>
+            <h2>Pulp Fiction (1994)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Квентін Тарантіно</p>
+                <p><strong>Рік випуску:</strong> 1994</p>
+                <p><strong>Головні актори:</strong> Джон Траволта, Сем Л. Джексон, Ума Турман</p>
+                <p><strong>Сюжет:</strong> Нелінійна розповідь про переплетені історії кримінального світу Лос-Анджелеса, включаючи двох кілерів, дружину гангстера та боксера. Культовий фільм, що революціонізував незалежне кіно своїм діалогом та структурою.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 17: Some Like It Hot -->
+    <div id="modal17" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal17')">&times;</span>
+            <h2>Some Like It Hot (1959)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Біллі Вайлдер</p>
+                <p><strong>Рік випуску:</strong> 1959</p>
+                <p><strong>Головні актори:</strong> Мерілін Монро, Тоні Кертіс, Джек Леммон</p>
+                <p><strong>Сюжет:</strong> Два музиканти стають свідками вбивства мафії та втікають, переодягнувшись жінками в жіночому оркестрі. Там вони зустрічають чарівну співачку Шугар. Класична комедія, що вважається однією з найкращих в історії кіно.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 18: Paris, Texas -->
+    <div id="modal18" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal18')">&times;</span>
+            <h2>Paris, Texas (1984)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Вім Вендерс</p>
+                <p><strong>Рік випуску:</strong> 1984</p>
+                <p><strong>Головні актори:</strong> Гаррі Дін Стентон, Наташа Кінські, Дін Стокуелл</p>
+                <p><strong>Сюжет:</strong> Після чотирьох років зникнення, Тревіс повертається до цивілізації і намагається відновити стосунки зі своїм братом та сином, а також знайти свою зниклу дружину. Медитативна дорожня драма про втрату, пам'ять та спокуту.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 19: Le Trou -->
+    <div id="modal19" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal19')">&times;</span>
+            <h2>Le Trou (1960)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Жак Бекер</p>
+                <p><strong>Рік випуску:</strong> 1960</p>
+                <p><strong>Головні актори:</strong> Мішель Константин, Жан Керо, Філіпп Леруа</p>
+                <p><strong>Сюжет:</strong> П'ять ув'язнених у паризькій в'язниці Санте планують втечу, копаючи тунель. Коли до їхньої камери підселяють нового в'язня, вони мусять вирішити, чи довіряти йому. Напружений тюремний трилер, заснований на реальних подіях.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 20: Singin' in the Rain -->
+    <div id="modal20" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal20')">&times;</span>
+            <h2>Singin' in the Rain (1952)</h2>
+            <div class="modal-info">
+                <p><strong>Режисер:</strong> Джин Келлі, Стенлі Донен</p>
+                <p><strong>Рік випуску:</strong> 1952</p>
+                <p><strong>Головні актори:</strong> Джин Келлі, Деббі Рейнольдс, Дональд О'Коннор</p>
+                <p><strong>Сюжет:</strong> Музична комедія про перехід Голлівуду від німого кіно до звукового в кінці 1920-х років. Розповідає про актора Дона Локвуда та його складні стосунки з колегами під час цієї революційної зміни. Вважається найкращим музичним фільмом всіх часів.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Закрити модальне вікно при кліку поза ним
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Закрити модальне вікно при натисканні Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
